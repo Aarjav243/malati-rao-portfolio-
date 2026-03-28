@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Fraunces", serif;
+  --font-sans: "Inter", sans-serif;
+  
+  --color-background-beige: #F7F4F0;
+  --color-charcoal: #1A1110;
+  --color-sunrise: #E97C4A;
+  
+  --color-beige-light: #FBF9F7;
+  --color-beige-default: #F7F4F0;
+  --color-beige-dark: #E9E4DF;
+  
+  --letter-spacing-widest: 0.2em;
+}
+
+@layer base {
+  body {
+    @apply font-sans antialiased bg-beige-default text-charcoal;
+  }
+}
+
+/* Custom Utilities - No @apply chains to avoid v4 build issues */
+.text-stroke {
+  -webkit-text-stroke: 1px #1A1110;
+}
+
+.underline-reveal {
+  @apply relative overflow-hidden;
+}
+
+.underline-reveal::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-full h-px bg-sunrise scale-x-0 origin-left transition-transform duration-500;
+}
+
+.underline-reveal:hover::after {
+  @apply scale-x-100;
+}
