@@ -115,7 +115,7 @@ export default function App() {
       {/* ── Footer ───────────────────────────────────────────── */}
       <footer style={{ borderTop: '1px solid #1E1E1E', padding: '40px 5%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#080808' }}>
         <span style={{ fontFamily: '"Fraunces", serif', fontStyle: 'italic', fontSize: '1.1rem', color: 'rgba(237,232,224,0.5)', letterSpacing: '-0.02em' }}>
-          Damini Gupta
+          Malati Rao
         </span>
         <div style={{ display: 'flex', gap: 20, color: 'rgba(237,232,224,0.25)' }}>
           {[Link, Link].map((Icon, i) => (
@@ -166,7 +166,7 @@ function Films({ onSelect }) {
       views: '',
       youtubeId: 'qPROCEXScHY',
       img: 'https://img.youtube.com/vi/qPROCEXScHY/maxresdefault.jpg',
-      description: 'Produced by Be YouNick, PIDLEGAON is a rural horror short film steeped in local myth and dread. A study in atmosphere over spectacle — and a bold genre departure that showcases Damini\'s range as a performer.',
+      description: 'Produced by Be YouNick, PIDLEGAON is a rural horror short film steeped in local myth and dread. A study in atmosphere over spectacle — and a bold genre departure that showcases Malati\'s range as a performer.',
       stills: ['https://img.youtube.com/vi/qPROCEXScHY/maxresdefault.jpg'],
     },
     {
@@ -177,7 +177,7 @@ function Films({ onSelect }) {
       views: '',
       youtubeId: 'HZ-4K2IN7DY',
       img: kaandePoheThumb,
-      description: 'Produced by Terribly Tiny Tales (TTT), Kaande Pohe is a Valentine\'s Day film about the quiet awkwardness of a traditional first meeting. Sharp, funny, and true — a performance that landed Damini on one of India\'s most-watched storytelling platforms.',
+      description: 'Produced by Terribly Tiny Tales (TTT), Kaande Pohe is a Valentine\'s Day film about the quiet awkwardness of a traditional first meeting. Sharp, funny, and true — a performance that landed Malati on one of India\'s most-watched storytelling platforms.',
       stills: [kandeStill1, kandeStill2, kandeStill3],
     },
   ];
@@ -356,7 +356,7 @@ function Bio() {
           style={{ position: 'relative' }}
         >
           <div style={{ aspectRatio: '3/4', borderRadius: 3, overflow: 'hidden', backgroundColor: '#111' }}>
-            <img src={heroImg} alt="Damini Gupta" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.05) brightness(0.95)' }} />
+            <img src={heroImg} alt="Malati Rao" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.05) brightness(0.95)' }} />
           </div>
           {/* Amber corner accent */}
           <div style={{ position: 'absolute', bottom: -1, right: -1, width: 48, height: 48, borderBottom: '1px solid #C8892A', borderRight: '1px solid #C8892A' }} />
@@ -365,7 +365,7 @@ function Bio() {
         {/* Text + stats */}
         <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ paddingTop: 8 }}>
           <motion.p variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontWeight: 300, fontSize: '1.2rem', lineHeight: 1.75, color: 'rgba(237,232,224,0.7)', marginBottom: 32 }}>
-            Damini Gupta is an actress whose work lives in the space between ordinary moments and unexpected feeling. She has appeared in films produced by India's most-watched digital studios — from Terribly Tiny Tales to Be YouNick — accumulating over 7 million views across a span of four films and three years.
+            Malati Rao is an actress whose work lives in the space between ordinary moments and unexpected feeling. She has appeared in films produced by India's most-watched digital studios — from Terribly Tiny Tales to Be YouNick — accumulating over 7 million views across a span of four films and three years.
           </motion.p>
 
           <motion.p variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontWeight: 300, fontSize: '1.2rem', lineHeight: 1.75, color: 'rgba(237,232,224,0.7)', marginBottom: 48 }}>
@@ -531,7 +531,7 @@ function Contact() {
           </motion.div>
           <div>
             <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.48rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B6560', margin: '0 0 4px' }}>Primary Contact</p>
-            <p style={{ fontFamily: '"Fraunces",serif', fontSize: '1.1rem', fontWeight: 300, color: '#EDE8E0', margin: 0 }}>daminigupta@email.com</p>
+            <p style={{ fontFamily: '"Fraunces",serif', fontSize: '1.1rem', fontWeight: 300, color: '#EDE8E0', margin: 0 }}>malatirao@email.com</p>
           </div>
         </motion.div>
       </motion.div>
