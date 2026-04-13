@@ -1,96 +1,91 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Download, Camera, Globe, Video, ExternalLink, Play, ArrowLeft } from 'lucide-react';
+import { Mail, Download, Play, ArrowLeft, Link } from 'lucide-react';
 
-// --- LOCAL ASSET IMPORTS ---
-import twinFlamesThumb from './assets/thumbnails/twin_flames.png';
-import kaandePoheThumb from './assets/thumbnails/kaande_pohe.png';
-import aparichitThumb from './assets/thumbnails/aparichit.png';
-import kandeStill1 from './assets/stills/kaande_pohe/still_1.png';
-import kandeStill2 from './assets/stills/kaande_pohe/still_2.png';
-import kandeStill3 from './assets/stills/kaande_pohe/still_3.png';
+import twinFlamesThumb  from './assets/thumbnails/twin_flames.png';
+import kaandePoheThumb  from './assets/thumbnails/kaande_pohe.png';
+import aparichitThumb   from './assets/thumbnails/aparichit.png';
+import heroImg          from './assets/hero.png';
+import kandeStill1      from './assets/stills/kaande_pohe/still_1.png';
+import kandeStill2      from './assets/stills/kaande_pohe/still_2.png';
+import kandeStill3      from './assets/stills/kaande_pohe/still_3.png';
 
-// --- ANIMATION VARIANTS ---
-
-const gridContainerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
-  }
-};
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 1, ease: [0.16, 1, 0.3, 1] }
-  }
-};
-
-const pageTransition = {
-  initial: { opacity: 0, x: 10 },
-  animate: { opacity: 1, x: 0 },
-  exit: { opacity: 0, x: -10 },
-  transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] }
-};
-
-// Shared reusable variants
-const fadeUpVariants = {
-  hidden: { opacity: 0, y: 40 },
+// ── Animation variants ────────────────────────────────────────
+const fadeUp = {
+  hidden:  { opacity: 0, y: 36 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.9, ease: [0.16, 1, 0.3, 1] } }
 };
 
-const staggerContainerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.12, delayChildren: 0.1 } }
+const stagger = {
+  hidden:  {},
+  visible: { transition: { staggerChildren: 0.11, delayChildren: 0.05 } }
 };
 
-const springTap = { type: 'spring', stiffness: 300, damping: 20 };
+const gridStagger = {
+  hidden:  { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.14, delayChildren: 0.1 } }
+};
 
-// --- MAIN APP COMPONENT ---
+const cardReveal = {
+  hidden:  { opacity: 0, y: 28 },
+  visible: { opacity: 1, y: 0, transition: { duration: 1, ease: [0.16, 1, 0.3, 1] } }
+};
+
+const pageFade = {
+  initial:    { opacity: 0, y: 8 },
+  animate:    { opacity: 1, y: 0 },
+  exit:       { opacity: 0, y: -8 },
+  transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] }
+};
+
+const spring = { type: 'spring', stiffness: 280, damping: 22 };
+
+// ── App ───────────────────────────────────────────────────────
 export default function App() {
-  const [activeTab, setActiveTab] = useState('FILMS');
-  const [selectedFilm, setSelectedFilm] = useState(null);
+  const [tab, setTab]     = useState('FILMS');
+  const [film, setFilm]   = useState(null);
 
-  const navLinks = [
-    { id: 'BIO', numeral: 'I' },
-    { id: 'VIEW', numeral: 'II' },
-    { id: 'ABOUT', numeral: 'III' },
-    { id: 'FILMS', numeral: 'IV' },
-    { id: 'CONTACT', numeral: 'V' }
-  ];
+  const nav = ['BIO', 'FILMS', 'WORK', 'BOOK', 'CONTACT'];
 
-  const handleFilmClick = (film) => {
-    setSelectedFilm(film);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const closeFilmDetail = () => {
-    setSelectedFilm(null);
-  };
+  const openFilm = (f) => { setFilm(f); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+  const closeFilm = () => setFilm(null);
 
   return (
-    <div className="min-h-screen font-sans selection:bg-sunrise selection:text-white bg-beige-default text-charcoal">
-      {/* --- NAVIGATION --- */}
+    <div style={{ backgroundColor: '#080808', color: '#EDE8E0', minHeight: '100vh', fontFamily: '"Inter", sans-serif' }}>
+
+      {/* ── Nav ─────────────────────────────────────────────── */}
       <motion.nav
-        initial={{ y: -100, x: '-50%' }}
-        animate={{ y: 0, x: '-50%' }}
+        initial={{ y: -80, x: '-50%' }}
+        animate={{ y: 0,   x: '-50%' }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed top-8 left-1/2 bg-charcoal/90 backdrop-blur-lg px-8 py-4 rounded-full flex gap-10 z-50 shadow-2xl border border-white/10"
+        style={{
+          position: 'fixed', top: 28, left: '50%',
+          backgroundColor: 'rgba(12,12,12,0.92)',
+          backdropFilter: 'blur(16px)',
+          border: '1px solid #242424',
+          borderRadius: 999,
+          display: 'flex', gap: 36,
+          padding: '14px 32px',
+          zIndex: 50,
+        }}
       >
-        {navLinks.map((link) => (
+        {nav.map(id => (
           <button
-            key={link.id}
-            onClick={() => { setActiveTab(link.id); setSelectedFilm(null); }}
-            className={`sans-label-base transition-all duration-300 relative group text-[0.65rem] uppercase tracking-widest font-medium py-1 ${activeTab === link.id && !selectedFilm ? 'text-sunrise' : 'text-white/40 hover:text-white'}`}
+            key={id}
+            onClick={() => { setTab(id); setFilm(null); }}
+            style={{
+              fontSize: '0.6rem', letterSpacing: '0.18em', fontWeight: 500,
+              textTransform: 'uppercase', fontFamily: '"Inter", sans-serif',
+              color: tab === id && !film ? '#C8892A' : 'rgba(237,232,224,0.35)',
+              background: 'none', border: 'none', cursor: 'pointer',
+              padding: '4px 0', position: 'relative', transition: 'color 0.25s',
+            }}
           >
-            {link.id}
-            {activeTab === link.id && !selectedFilm && (
+            {id}
+            {tab === id && !film && (
               <motion.div
-                layoutId="nav-underline"
-                className="absolute -bottom-1 left-0 right-0 h-px bg-sunrise"
+                layoutId="underline"
+                style={{ position: 'absolute', bottom: -2, left: 0, right: 0, height: 1, background: '#C8892A' }}
                 transition={{ type: 'spring', stiffness: 380, damping: 30 }}
               />
             )}
@@ -98,207 +93,222 @@ export default function App() {
         ))}
       </motion.nav>
 
-      {/* Main Content Area */}
-      <main className="pt-40 pb-20 px-[5%] max-w-[1600px] mx-auto overflow-hidden">
+      {/* ── Main ─────────────────────────────────────────────── */}
+      <main style={{ paddingTop: 128, paddingBottom: 80, paddingLeft: '5%', paddingRight: '5%', maxWidth: 1440, margin: '0 auto' }}>
         <AnimatePresence mode="wait">
-          {selectedFilm ? (
-            <motion.div
-              key="film-detail"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.98 }}
-              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <FilmDetail film={selectedFilm} onBack={closeFilmDetail} />
+          {film ? (
+            <motion.div key="detail" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
+              <FilmDetail film={film} onBack={closeFilm} />
             </motion.div>
           ) : (
-            <motion.div key={activeTab} {...pageTransition}>
-              {activeTab === 'FILMS' && <Films onFilmSelect={handleFilmClick} />}
-              {activeTab === 'BIO' && <Bio />}
-              {activeTab === 'ABOUT' && <About />}
-              {activeTab === 'VIEW' && <ViewPage />}
-              {activeTab === 'CONTACT' && <Contact />}
+            <motion.div key={tab} {...pageFade}>
+              {tab === 'FILMS'   && <Films   onSelect={openFilm} />}
+              {tab === 'BIO'     && <Bio />}
+              {tab === 'WORK'    && <Work />}
+              {tab === 'BOOK'    && <Book />}
+              {tab === 'CONTACT' && <Contact />}
             </motion.div>
           )}
         </AnimatePresence>
       </main>
 
-      <footer className="border-t border-beige-dark py-12 px-[5%] flex justify-between items-center bg-white/50">
-        <span className="serif-title italic text-xl opacity-80 font-serif tracking-tight">Elena Vance</span>
-        <div className="flex gap-8 text-charcoal/40">
-          {[Camera, Globe, Video].map((Icon, i) => (
-            <motion.div
-              key={i}
-              whileHover={{ y: -3, scale: 1.2, color: 'var(--color-sunrise)' }}
-              transition={springTap}
-              className="cursor-pointer"
-            >
-              <Icon className="w-5 h-5" />
+      {/* ── Footer ───────────────────────────────────────────── */}
+      <footer style={{ borderTop: '1px solid #1E1E1E', padding: '40px 5%', display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#080808' }}>
+        <span style={{ fontFamily: '"Fraunces", serif', fontStyle: 'italic', fontSize: '1.1rem', color: 'rgba(237,232,224,0.5)', letterSpacing: '-0.02em' }}>
+          Damini Gupta
+        </span>
+        <div style={{ display: 'flex', gap: 20, color: 'rgba(237,232,224,0.25)' }}>
+          {[Link, Link].map((Icon, i) => (
+            <motion.div key={i} whileHover={{ y: -3, color: '#C8892A' }} transition={spring} style={{ cursor: 'pointer' }}>
+              <Icon size={16} />
             </motion.div>
           ))}
         </div>
+        <span style={{ fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(237,232,224,0.2)' }}>
+          © 2024
+        </span>
       </footer>
     </div>
   );
 }
 
-// --- PAGE COMPONENTS ---
-
-function Films({ onFilmSelect }) {
+// ── FILMS ─────────────────────────────────────────────────────
+function Films({ onSelect }) {
   const films = [
     {
-      title: 'Twin Flames - A Romantic Short Film',
-      year: '2024',
-      type: 'Romantic',
+      title: 'Twin Flames',
+      subtitle: 'A Romantic Short Film',
+      year: '2024', type: 'Romance',
+      studio: 'The Storygraphers',
+      views: '4M+ Views',
       youtubeId: 'c2iFiaPr5dY',
       img: twinFlamesThumb,
-      description: 'A romantic short film produced by The Storygraphers about connection and emotional resonance.',
-      stills: [twinFlamesThumb]
+      description: 'A deeply felt romantic short film about two souls drawn together across distance and doubt. Produced by The Storygraphers, Twin Flames earned 4 million views and selections at the Short Film Festival, Pune and Kalakari — WideScreen Film & Music Video Festival 2024.',
+      stills: [twinFlamesThumb],
     },
     {
-      title: 'Aparichit: Heavy rain brings a stranger...',
-      year: '2023',
-      type: 'Suspense/Short Film',
+      title: 'Aparichit',
+      subtitle: 'Heavy rain brings a stranger…',
+      year: '2023', type: 'Suspense',
+      studio: 'Setups & Payoffs Studios',
+      views: '3M+ Views',
       youtubeId: 'sbMkZSHA5UY',
       start: 52,
       img: aparichitThumb,
-      description: 'Directed by Rahat Jain and produced by Setups & Payoffs Studios. A suspenseful exploration of a chance encounter during a storm.',
-      stills: [aparichitThumb]
+      description: 'Directed by Rahat Jain for Setups & Payoffs Studios (7.05K subscribers), Aparichit is a taut psychological short about a woman home alone when a stranger knocks during a downpour. Earned 3 million views and was screened at IDSF1K.',
+      stills: [aparichitThumb],
     },
     {
-      title: 'PIDLEGAON | Horror Short Film',
-      year: '2023',
-      type: 'Horror',
+      title: 'PIDLEGAON',
+      subtitle: 'Horror Short Film',
+      year: '2023', type: 'Horror',
+      studio: 'Be YouNick',
+      views: '',
       youtubeId: 'qPROCEXScHY',
       img: 'https://img.youtube.com/vi/qPROCEXScHY/maxresdefault.jpg',
-      description: 'A horror short film by Be YouNick that dives into local mysteries and chilling atmospheric tension.',
-      stills: ['https://img.youtube.com/vi/qPROCEXScHY/maxresdefault.jpg']
+      description: 'Produced by Be YouNick, PIDLEGAON is a rural horror short film steeped in local myth and dread. A study in atmosphere over spectacle — and a bold genre departure that showcases Damini\'s range as a performer.',
+      stills: ['https://img.youtube.com/vi/qPROCEXScHY/maxresdefault.jpg'],
     },
     {
-      title: "Kaande Pohe | Valentine's Day Film",
-      year: '2022',
-      type: 'Romantic',
+      title: 'Kaande Pohe',
+      subtitle: "Valentine's Day Film",
+      year: '2022', type: 'Romance',
+      studio: 'Terribly Tiny Tales',
+      views: '',
       youtubeId: 'HZ-4K2IN7DY',
       img: kaandePoheThumb,
-      description: 'Produced by Terribly Tiny Tales (TTT), this film explores modern relationships and family dynamics during a traditional meeting.',
-      stills: [kandeStill1, kandeStill2, kandeStill3]
-    }
+      description: 'Produced by Terribly Tiny Tales (TTT), Kaande Pohe is a Valentine\'s Day film about the quiet awkwardness of a traditional first meeting. Sharp, funny, and true — a performance that landed Damini on one of India\'s most-watched storytelling platforms.',
+      stills: [kandeStill1, kandeStill2, kandeStill3],
+    },
   ];
 
   return (
-    <motion.div
-      variants={gridContainerVariants}
-      initial="hidden"
-      animate="visible"
-      className="grid grid-cols-1 md:grid-cols-2 gap-20"
+    <motion.div variants={gridStagger} initial="hidden" animate="visible"
+      style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '4rem 3rem' }}
     >
-      {films.map((film, idx) => (
+      {films.map((f, i) => (
         <motion.div
-          key={idx}
-          variants={cardVariants}
-          whileHover={{ y: -6 }}
-          transition={springTap}
-          className="group cursor-pointer"
-          onClick={() => onFilmSelect(film)}
+          key={i} variants={cardReveal}
+          whileHover={{ y: -6 }} transition={spring}
+          onClick={() => onSelect(f)}
+          style={{ cursor: 'pointer' }}
         >
-          <div className="relative overflow-hidden aspect-video rounded-2xl mb-6 bg-charcoal/5">
-            <img
-              src={film.img}
-              alt={film.title}
-              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+          {/* Thumbnail */}
+          <div style={{ position: 'relative', aspectRatio: '16/9', borderRadius: 4, overflow: 'hidden', marginBottom: 20, backgroundColor: '#111' }}>
+            <img src={f.img} alt={f.title} style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.9s ease', display: 'block' }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.04)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
             />
-            <div className="absolute inset-0 bg-charcoal/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 text-white scale-90 group-hover:scale-100 transition-transform duration-500">
-                <Play className="fill-white w-6 h-6" />
+            {/* Overlay */}
+            <div className="film-hover-overlay" style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(8,8,8,0.85) 0%, rgba(8,8,8,0.1) 50%, transparent 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 16 }}>
+              {/* Genre stamp top-left */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <span className="genre-stamp">{f.type}</span>
+                {f.views && (
+                  <span style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'rgba(237,232,224,0.5)', fontWeight: 500 }}>{f.views}</span>
+                )}
+              </div>
+              {/* Studio bottom-left */}
+              <span style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.5rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'rgba(237,232,224,0.35)', fontWeight: 500 }}>
+                {f.studio}
+              </span>
+            </div>
+            {/* Play button — center, appears on hover via CSS */}
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: 0, transition: 'opacity 0.4s ease' }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '0'}
+            >
+              <div style={{ width: 56, height: 56, borderRadius: '50%', background: 'rgba(200,137,42,0.9)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(4px)' }}>
+                <Play fill="#080808" color="#080808" size={20} style={{ marginLeft: 3 }} />
               </div>
             </div>
           </div>
-          <div className="flex justify-between items-baseline mb-2">
-            <h2 className="serif-title italic font-serif text-3xl group-hover:text-sunrise transition-colors tracking-tight leading-tight">{film.title}</h2>
-            <span className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal/40 font-sans italic">{film.year}</span>
+
+          {/* Meta */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 6 }}>
+            <h2 style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: '1.75rem', fontWeight: 400, letterSpacing: '-0.03em', lineHeight: 1.15, color: '#EDE8E0', margin: 0, transition: 'color 0.25s' }}
+              onMouseEnter={e => e.currentTarget.style.color = '#C8892A'}
+              onMouseLeave={e => e.currentTarget.style.color = '#EDE8E0'}
+            >
+              {f.title}
+            </h2>
+            <span style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B6560', fontStyle: 'italic', whiteSpace: 'nowrap', marginLeft: 16 }}>
+              {f.year}
+            </span>
           </div>
-          <p className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal/60 font-sans">{film.type}</p>
+          <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B6560', margin: 0 }}>
+            {f.subtitle}
+          </p>
         </motion.div>
       ))}
     </motion.div>
   );
 }
 
+// ── FILM DETAIL ───────────────────────────────────────────────
 function FilmDetail({ film, onBack }) {
-  const embedUrl = `https://www.youtube.com/embed/${film.youtubeId}${film.start ? `?start=${film.start}` : ''}`;
-
+  const src = `https://www.youtube.com/embed/${film.youtubeId}${film.start ? `?start=${film.start}` : ''}`;
   return (
-    <div className="space-y-12 max-w-7xl mx-auto">
+    <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+      {/* Back */}
       <motion.button
         onClick={onBack}
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ x: -3 }}
-        className="flex items-center gap-2 sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal hover:text-sunrise transition-colors mb-4 group cursor-pointer relative z-10 px-4 py-2 rounded-full border border-charcoal/20 hover:border-sunrise"
+        initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}
+        whileHover={{ x: -3 }} transition={{ duration: 0.4 }}
+        style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B6560', background: 'none', border: '1px solid #242424', borderRadius: 999, padding: '8px 16px', cursor: 'pointer', marginBottom: 40, fontFamily: '"Inter",sans-serif', transition: 'color 0.2s, border-color 0.2s' }}
+        onMouseEnter={e => { e.currentTarget.style.color = '#C8892A'; e.currentTarget.style.borderColor = '#C8892A'; }}
+        onMouseLeave={e => { e.currentTarget.style.color = '#6B6560'; e.currentTarget.style.borderColor = '#242424'; }}
       >
-        <ArrowLeft className="w-3 h-3 transition-transform group-hover:-translate-x-1" /> BACK TO FILMS
+        <ArrowLeft size={12} /> Back to Films
       </motion.button>
 
-      <motion.div
-        className="space-y-4"
-        variants={staggerContainerVariants}
-        initial="hidden"
-        animate="visible"
-      >
-        <motion.h1 variants={fadeUpVariants} className="serif-title italic font-serif text-7xl tracking-tight leading-tight">{film.title}</motion.h1>
-        <motion.p variants={fadeUpVariants} className="sans-label-base text-sm opacity-60 font-medium tracking-widest uppercase">{film.year} • {film.type}</motion.p>
+      {/* Title block */}
+      <motion.div variants={stagger} initial="hidden" animate="visible" style={{ marginBottom: 48 }}>
+        <motion.div variants={fadeUp} style={{ marginBottom: 8 }}>
+          <span className="genre-stamp">{film.type}</span>
+        </motion.div>
+        <motion.h1 variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: 'clamp(2.5rem,6vw,5rem)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.05, color: '#EDE8E0', margin: '12px 0 8px' }}>
+          {film.title}
+        </motion.h1>
+        <motion.p variants={fadeUp} style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.6rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B6560' }}>
+          {film.year} · {film.studio}
+        </motion.p>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
-        {/* Left Column */}
-        <div className="lg:col-span-8 space-y-10">
+      {/* Content grid */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 48, alignItems: 'start' }}>
+        {/* Left */}
+        <div>
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className="aspect-video w-full bg-charcoal/5 rounded-3xl overflow-hidden shadow-2xl border border-charcoal/5"
+            initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.9, ease: [0.16,1,0.3,1] }}
+            style={{ aspectRatio: '16/9', borderRadius: 4, overflow: 'hidden', border: '1px solid #1E1E1E', marginBottom: 36 }}
           >
-            <iframe
-              src={embedUrl}
-              title={film.title}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            ></iframe>
+            <iframe src={src} title={film.title} style={{ width: '100%', height: '100%', display: 'block' }}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen />
           </motion.div>
 
-          <div className="space-y-6">
-            <h3 className="sans-label-base text-[0.65rem] uppercase tracking-[0.2em] font-medium text-charcoal/40">Synopsis</h3>
+          <div style={{ borderTop: '1px solid #1E1E1E', paddingTop: 28 }}>
+            <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B6560', marginBottom: 14 }}>Synopsis</p>
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-80px' }}
-              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="text-xl leading-relaxed text-charcoal/80 font-light max-w-3xl"
+              initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.8 }}
+              style={{ fontFamily: '"Fraunces",serif', fontWeight: 300, fontSize: '1.15rem', lineHeight: 1.75, color: 'rgba(237,232,224,0.75)', margin: 0 }}
             >
               {film.description}
             </motion.p>
           </div>
         </div>
 
-        {/* Right Column: Stills */}
-        <div className="lg:col-span-4 space-y-8">
-          <h3 className="sans-label-base text-[0.65rem] uppercase tracking-[0.2em] font-medium text-charcoal/40">Stills & Gallery</h3>
-          <motion.div
-            className="space-y-4"
-            variants={staggerContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-          >
-            {film.stills.map((still, i) => (
-              <motion.img
-                key={i}
-                variants={fadeUpVariants}
-                src={still}
-                className="w-full rounded-2xl grayscale hover:grayscale-0 transition-all duration-700 aspect-[4/3] object-cover bg-charcoal/5"
-                alt={`Still ${i + 1}`}
+        {/* Right — stills */}
+        <div>
+          <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B6560', marginBottom: 16 }}>Stills & Gallery</p>
+          <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+            {film.stills.map((s, i) => (
+              <motion.img key={i} variants={fadeUp} src={s} alt={`Still ${i+1}`}
+                style={{ width: '100%', aspectRatio: '4/3', objectFit: 'cover', borderRadius: 3, filter: 'grayscale(1)', transition: 'filter 0.7s ease', display: 'block' }}
+                onMouseEnter={e => e.currentTarget.style.filter = 'grayscale(0)'}
+                onMouseLeave={e => e.currentTarget.style.filter = 'grayscale(1)'}
               />
             ))}
           </motion.div>
@@ -308,290 +318,266 @@ function FilmDetail({ film, onBack }) {
   );
 }
 
+// ── BIO ───────────────────────────────────────────────────────
 function Bio() {
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-20 items-start">
-      <div className="lg:col-span-1 py-10">
-        <motion.span
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 0.5, y: 0 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-          className="serif-title italic font-serif text-charcoal/10 text-[12rem] leading-none select-none absolute -left-10 tracking-tight"
-        >I</motion.span>
-      </div>
-
-      <div className="lg:col-span-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mb-20"
-        >
-          <div className="aspect-[4/5] rounded-3xl overflow-hidden bg-beige-dark">
-            <img
-              src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=1200"
-              alt="Portrait"
-              className="w-full h-full object-cover grayscale brightness-110"
-            />
-          </div>
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-            className="absolute -bottom-10 -right-10 w-40 h-40 bg-sunrise rounded-full flex items-center justify-center text-white border-8 border-beige-default p-8 text-center leading-tight sans-label-base text-[0.65rem] uppercase tracking-widest font-medium cursor-pointer hover:scale-110 transform transition-transform"
-          >
-            WATCH REEL
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="space-y-8 text-xl text-charcoal/80 leading-relaxed font-light"
-          variants={staggerContainerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-        >
-          <motion.p variants={fadeUpVariants}>
-            Elena Vance is an independent filmmaker and scholar whose practice explores the intersection of memory, archives, and digital archaeology.
-          </motion.p>
-          <motion.p variants={fadeUpVariants}>
-            Her work has been recognized with fellowships from the{' '}
-            <span className="underline-reveal relative overflow-hidden inline-block group cursor-pointer hover:before:scale-x-100 before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-full before:h-px before:bg-sunrise before:scale-x-0 before:origin-left before:transition-transform before:duration-500">Guggenheim Foundation</span>
-            {' '}and{' '}
-            <span className="underline-reveal relative overflow-hidden inline-block group cursor-pointer hover:before:scale-x-100 before:content-[''] before:absolute before:bottom-0 before:left-0 before:w-full before:h-px before:bg-sunrise before:scale-x-0 before:origin-left before:transition-transform before:duration-500">Creative Capital</span>.
-          </motion.p>
-        </motion.div>
-      </div>
-
-      <div className="lg:col-span-5 space-y-12">
-        <motion.div
-          variants={fadeUpVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="premium-card relative bg-white/80 border border-beige-dark p-8 rounded-lg overflow-hidden transition-all duration-500 hover:border-charcoal/20 shadow-sm shadow-charcoal/5"
-        >
-          <div className="absolute top-0 right-0 p-4">
-            <ExternalLink className="w-4 h-4 text-charcoal/20" />
-          </div>
-          <h3 className="serif-title italic font-serif tracking-tight text-2xl mb-6">Current Affiliation</h3>
-          <div className="space-y-2 sans-label-base text-[0.65rem] font-sans uppercase tracking-widest text-charcoal/60">
-            <p className="text-charcoal font-bold">Professor of Cinema Studies</p>
-            <p>Department of Photography & Film</p>
-            <p>Virginia Commonwealth University</p>
-          </div>
-        </motion.div>
-
-        <motion.button
-          variants={fadeUpVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.97 }}
-          transition={springTap}
-          className="w-full bg-charcoal text-white rounded-full py-6 sans-label-base text-[0.65rem] uppercase tracking-widest font-medium font-sans hover:bg-sunrise transition-colors flex items-center justify-center gap-3 shadow-lg shadow-charcoal/10"
-        >
-          <Download className="w-4 h-4" /> DOWNLOAD CURRICULUM VITAE
-        </motion.button>
-      </div>
-    </div>
-  );
-}
-
-function About() {
-  const sections = [
-    {
-      title: 'Select Writing',
-      items: [
-        { text: '\u201cThe Archive of the Invisible.\u201d', journal: 'Journal of Contemporary Cinema', year: '2023' },
-        { text: '\u201cFragments and Frames: Rethinking the Subject.\u201d', journal: 'Sight & Sound', year: '2021' },
-        { text: '\u201cNotes on Asymmetry in the Digital Age,\u201d', journal: 'University Press', year: '2019' }
-      ]
-    },
-    {
-      title: 'Featured Press',
-      items: [
-        { text: "Smith, J. Review of '24 Frames Per Day'.", journal: 'The Film Quarterly', year: '2022' },
-        { text: 'Davis, A. Elevating the Everyday: Elena Vance.', journal: 'Modern Art Review', year: '2020' }
-      ]
-    }
+  const stats = [
+    { value: '7M+',   label: 'Combined Views' },
+    { value: '4',     label: 'Short Films'     },
+    { value: '4',     label: 'Major Studios'   },
   ];
 
   return (
-    <div className="max-w-4xl mx-auto space-y-32 py-20 relative">
-      <motion.span
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
-        className="serif-title italic font-serif tracking-tight text-charcoal/5 text-[15rem] absolute -top-20 -left-20 pointer-events-none"
-      >III</motion.span>
-
-      {sections.map((section, idx) => (
-        <section key={idx} className="space-y-12 relative z-10">
-          <motion.h2
-            variants={fadeUpVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-            className="serif-title italic font-serif tracking-tight text-6xl border-b border-charcoal/10 pb-8"
+    <div>
+      {/* Hero name block */}
+      <div style={{ borderBottom: '1px solid #1E1E1E', paddingBottom: 40, marginBottom: 56 }}>
+        <motion.p
+          initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6 }}
+          style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#C8892A', marginBottom: 16 }}
+        >
+          Actress · Mumbai
+        </motion.p>
+        <div style={{ overflow: 'hidden' }}>
+          <motion.h1
+            initial={{ y: '100%', opacity: 0 }} animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: 'clamp(4rem,10vw,9rem)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 0.9, color: '#EDE8E0', margin: 0 }}
           >
-            {section.title}
-          </motion.h2>
+            Malati<br />Rao
+          </motion.h1>
+        </div>
+      </div>
 
-          <motion.div
-            className="space-y-10"
-            variants={staggerContainerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-80px' }}
-          >
-            {section.items.map((item, i) => (
-              <motion.div
-                key={i}
-                variants={fadeUpVariants}
-                whileHover={{ x: 6 }}
-                transition={springTap}
-                className="group cursor-pointer"
-              >
-                <div className="flex justify-between items-start gap-10">
-                  <div className="space-y-2">
-                    <p className="text-2xl font-light leading-tight group-hover:text-sunrise transition-colors">{item.text}</p>
-                    <p className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal/40 italic font-sans">{item.journal}</p>
-                  </div>
-                  <span className="sans-label-base text-[0.65rem] uppercase tracking-widest bg-charcoal/5 px-3 py-1 rounded text-charcoal/40 font-mono">{item.year}</span>
-                </div>
-              </motion.div>
+      {/* Two-column */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4rem', alignItems: 'start', marginBottom: 64 }}>
+        {/* Portrait */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }} transition={{ duration: 1, ease: [0.16,1,0.3,1] }}
+          style={{ position: 'relative' }}
+        >
+          <div style={{ aspectRatio: '3/4', borderRadius: 3, overflow: 'hidden', backgroundColor: '#111' }}>
+            <img src={heroImg} alt="Damini Gupta" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'contrast(1.05) brightness(0.95)' }} />
+          </div>
+          {/* Amber corner accent */}
+          <div style={{ position: 'absolute', bottom: -1, right: -1, width: 48, height: 48, borderBottom: '1px solid #C8892A', borderRight: '1px solid #C8892A' }} />
+        </motion.div>
+
+        {/* Text + stats */}
+        <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ paddingTop: 8 }}>
+          <motion.p variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontWeight: 300, fontSize: '1.2rem', lineHeight: 1.75, color: 'rgba(237,232,224,0.7)', marginBottom: 32 }}>
+            Damini Gupta is an actress whose work lives in the space between ordinary moments and unexpected feeling. She has appeared in films produced by India's most-watched digital studios — from Terribly Tiny Tales to Be YouNick — accumulating over 7 million views across a span of four films and three years.
+          </motion.p>
+
+          <motion.p variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontWeight: 300, fontSize: '1.2rem', lineHeight: 1.75, color: 'rgba(237,232,224,0.7)', marginBottom: 48 }}>
+            Comfortable across romance, psychological suspense, and horror, she brings an instinctive naturalism to every genre — a quality that has made her collaborators return, and her audiences stay.
+          </motion.p>
+
+          {/* Stats */}
+          <motion.div variants={fadeUp} style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', borderTop: '1px solid #1E1E1E', paddingTop: 28, gap: 0 }}>
+            {stats.map((s, i) => (
+              <div key={i} style={{ borderRight: i < 2 ? '1px solid #1E1E1E' : 'none', paddingRight: i < 2 ? 24 : 0, paddingLeft: i > 0 ? 24 : 0 }}>
+                <p style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: '2.5rem', fontWeight: 400, letterSpacing: '-0.04em', color: '#C8892A', margin: '0 0 4px' }}>{s.value}</p>
+                <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.52rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B6560', margin: 0 }}>{s.label}</p>
+              </div>
             ))}
           </motion.div>
-        </section>
-      ))}
-    </div>
-  );
-}
+        </motion.div>
+      </div>
 
-function ViewPage() {
-  return (
-    <div className="flex flex-col items-center justify-center py-40 space-y-20 relative text-center">
-      <span className="serif-title italic font-serif tracking-tight text-charcoal/5 text-[15rem] absolute -top-10 left-1/2 -translate-x-1/2 pointer-events-none">II</span>
-
-      <motion.h2
-        variants={fadeUpVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
-        className="serif-title italic font-serif tracking-tight text-7xl leading-tight"
-      >
-        Screenings &<br /><span className="italic text-transparent" style={{ WebkitTextStroke: '1px #1A1110' }}>Inquiries</span>
-      </motion.h2>
-
+      {/* Download reel button */}
       <motion.div
-        className="flex flex-col md:flex-row gap-8 w-full max-w-2xl"
-        variants={staggerContainerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, margin: '-80px' }}
+        initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.8 }}
+        style={{ display: 'flex', gap: 16 }}
       >
         <motion.button
-          variants={fadeUpVariants}
-          whileHover={{ y: -4, scale: 1.01 }}
-          whileTap={{ scale: 0.98 }}
-          transition={springTap}
-          className="w-full group bg-white border border-charcoal/10 rounded-3xl p-10 hover:border-sunrise transition-colors text-left space-y-4"
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={spring}
+          style={{ padding: '14px 32px', background: '#C8892A', color: '#080808', border: 'none', borderRadius: 999, fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: '"Inter",sans-serif', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
         >
-          <span className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal/40 font-sans">Mode I</span>
-          <p className="serif-title italic font-serif tracking-tight text-3xl">Institutional Use</p>
-          <p className="text-sm text-charcoal/50 font-light">For universities, museums, and educational distribution.</p>
+          <Download size={13} /> Download Portfolio
         </motion.button>
-
         <motion.button
-          variants={fadeUpVariants}
-          whileHover={{ y: -4, scale: 1.01 }}
-          whileTap={{ scale: 0.98 }}
-          transition={springTap}
-          className="w-full group bg-charcoal text-white rounded-3xl p-10 hover:bg-sunrise transition-colors text-left space-y-4"
+          whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }} transition={spring}
+          style={{ padding: '14px 32px', background: 'transparent', color: '#EDE8E0', border: '1px solid #242424', borderRadius: 999, fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: '"Inter",sans-serif', fontWeight: 500, cursor: 'pointer', transition: 'border-color 0.2s' }}
+          onMouseEnter={e => e.currentTarget.style.borderColor = '#C8892A'}
+          onMouseLeave={e => e.currentTarget.style.borderColor = '#242424'}
         >
-          <span className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-white/40 font-sans">Mode II</span>
-          <p className="serif-title italic font-serif tracking-tight text-3xl">Home Viewing</p>
-          <p className="text-sm text-white/50 font-light">Digital screening access for private individuals.</p>
+          Watch Reel
         </motion.button>
       </motion.div>
     </div>
   );
 }
 
-function Contact() {
+// ── WORK ──────────────────────────────────────────────────────
+function Work() {
+  const productions = [
+    { studio: 'The Storygraphers',      film: 'Twin Flames',              role: 'Lead',       year: '2024', note: 'Short Film Festival, Pune · Kalakari 2024' },
+    { studio: 'Setups & Payoffs Studios', film: 'Aparichit',              role: 'Lead',       year: '2023', note: 'IDSF1K Selection · Directed by Rahat Jain' },
+    { studio: 'Be YouNick',             film: 'PIDLEGAON',                role: 'Protagonist', year: '2023', note: 'Horror · 7M+ channel reach' },
+    { studio: 'Terribly Tiny Tales',    film: "Kaande Pohe",              role: 'Lead',       year: '2022', note: "Valentine's Day · TTT Platform" },
+  ];
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 py-20 relative">
-      <span className="serif-title italic font-serif tracking-tight text-charcoal/5 text-[15rem] absolute -top-20 right-0 pointer-events-none">V</span>
-
-      <div className="space-y-16">
-        <motion.h2
-          variants={fadeUpVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
-          className="serif-title italic font-serif tracking-tight text-8xl leading-none"
-        >
-          Say<br /><span className="italic text-sunrise">Hello</span>
+    <div style={{ maxWidth: 880, margin: '0 auto', paddingTop: 24 }}>
+      <motion.div variants={stagger} initial="hidden" animate="visible">
+        <motion.p variants={fadeUp} style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C8892A', marginBottom: 20 }}>
+          Filmography
+        </motion.p>
+        <motion.h2 variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.05, color: '#EDE8E0', margin: '0 0 56px' }}>
+          Productions &<br />Recognition
         </motion.h2>
+      </motion.div>
 
-        <motion.div
-          className="space-y-6"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <div className="flex items-center gap-6 group cursor-pointer">
-            <motion.div
-              whileHover={{ rotate: 15, scale: 1.1 }}
-              transition={springTap}
-              className="w-14 h-14 rounded-full bg-charcoal flex items-center justify-center text-white group-hover:bg-sunrise transition-colors shadow-lg"
-            >
-              <Mail className="w-6 h-6" />
-            </motion.div>
+      <motion.div variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}>
+        {productions.map((p, i) => (
+          <motion.div key={i} variants={fadeUp}
+            whileHover={{ x: 6 }} transition={spring}
+            style={{ display: 'grid', gridTemplateColumns: '1fr auto', alignItems: 'start', gap: 24, padding: '28px 0', borderBottom: '1px solid #1E1E1E', cursor: 'default' }}
+          >
             <div>
-              <p className="sans-label-base text-[0.65rem] uppercase tracking-widest font-medium text-charcoal/40 font-sans">Primary Contact</p>
-              <p className="text-2xl font-light">evance@vcu.edu</p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 8 }}>
+                <span className="genre-stamp">{p.role}</span>
+                <h3 style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: '1.5rem', fontWeight: 400, letterSpacing: '-0.03em', color: '#EDE8E0', margin: 0 }}>{p.film}</h3>
+              </div>
+              <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.18em', textTransform: 'uppercase', color: '#6B6560', margin: '0 0 6px' }}>{p.studio}</p>
+              <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.12em', color: 'rgba(200,137,42,0.6)', margin: 0 }}>{p.note}</p>
             </div>
-          </div>
-        </motion.div>
-      </div>
+            <span style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.58rem', letterSpacing: '0.18em', color: '#6B6560', paddingTop: 4, whiteSpace: 'nowrap' }}>{p.year}</span>
+          </motion.div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ── BOOK ──────────────────────────────────────────────────────
+function Book() {
+  const modes = [
+    { label: 'Mode I',  title: 'Casting & Projects',  desc: 'For directors, producers, and casting directors looking for a committed lead or supporting performer.', dark: false },
+    { label: 'Mode II', title: 'Brand Collaborations', desc: 'For brands seeking authentic storytelling through performance — digital, commercial, and campaign work.', dark: true },
+  ];
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: 80, paddingBottom: 80, textAlign: 'center', gap: 56 }}>
+      <motion.div variants={stagger} initial="hidden" animate="visible">
+        <motion.p variants={fadeUp} style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C8892A', marginBottom: 16 }}>
+          Available For
+        </motion.p>
+        <motion.h2 variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: 'clamp(2.5rem,6vw,4.5rem)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 1.1, color: '#EDE8E0', margin: 0 }}>
+          Let's Make<br />Something Real
+        </motion.h2>
+      </motion.div>
 
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={{ duration: 0.9, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-        className="bg-white rounded-[2rem] p-12 shadow-2xl shadow-charcoal/5 border border-beige-dark space-y-10"
+        variants={stagger} initial="hidden" whileInView="visible" viewport={{ once: true }}
+        style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, width: '100%', maxWidth: 640 }}
       >
-        <div className="grid grid-cols-2 gap-8">
-          <div className="space-y-2 border-b border-beige-dark pb-4 focus-within:border-charcoal transition-colors">
-            <label className="sans-label-base text-[0.55rem] uppercase tracking-[0.2em] font-medium text-charcoal/30 font-sans">First Name</label>
-            <input type="text" className="w-full bg-transparent focus:outline-none text-xl font-light" />
+        {modes.map((m, i) => (
+          <motion.button key={i} variants={fadeUp}
+            whileHover={{ y: -5, scale: 1.01 }} whileTap={{ scale: 0.98 }} transition={spring}
+            style={{
+              padding: 36, borderRadius: 4, textAlign: 'left', cursor: 'pointer',
+              background:     m.dark ? '#C8892A'   : '#111111',
+              border:         m.dark ? 'none'      : '1px solid #242424',
+              color:          m.dark ? '#080808'   : '#EDE8E0',
+              transition: 'border-color 0.2s',
+            }}
+            onMouseEnter={e => { if (!m.dark) e.currentTarget.style.borderColor = '#C8892A'; }}
+            onMouseLeave={e => { if (!m.dark) e.currentTarget.style.borderColor = '#242424'; }}
+          >
+            <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.5rem', letterSpacing: '0.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 14, color: m.dark ? 'rgba(8,8,8,0.6)' : '#6B6560' }}>{m.label}</p>
+            <p style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: '1.4rem', fontWeight: 400, letterSpacing: '-0.02em', marginBottom: 14, lineHeight: 1.2 }}>{m.title}</p>
+            <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.8rem', lineHeight: 1.6, fontWeight: 300, color: m.dark ? 'rgba(8,8,8,0.7)' : 'rgba(237,232,224,0.45)', margin: 0 }}>{m.desc}</p>
+          </motion.button>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ── CONTACT ───────────────────────────────────────────────────
+function Contact() {
+  const inputStyle = {
+    width: '100%', background: 'transparent', border: 'none', borderBottom: '1px solid #242424',
+    outline: 'none', padding: '10px 0', fontSize: '1.1rem', fontFamily: '"Fraunces",serif',
+    fontWeight: 300, color: '#EDE8E0', boxSizing: 'border-box',
+    transition: 'border-color 0.2s',
+  };
+  const labelStyle = {
+    fontFamily: '"Inter",sans-serif', fontSize: '0.48rem', letterSpacing: '0.22em',
+    textTransform: 'uppercase', color: '#6B6560', display: 'block', marginBottom: 6,
+  };
+
+  return (
+    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6rem', paddingTop: 24, alignItems: 'start' }}>
+      {/* Left */}
+      <motion.div variants={stagger} initial="hidden" animate="visible">
+        <motion.p variants={fadeUp} style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.55rem', letterSpacing: '0.22em', textTransform: 'uppercase', color: '#C8892A', marginBottom: 20 }}>
+          Get In Touch
+        </motion.p>
+        <motion.h2 variants={fadeUp} style={{ fontFamily: '"Fraunces",serif', fontStyle: 'italic', fontSize: 'clamp(3rem,7vw,5.5rem)', fontWeight: 400, letterSpacing: '-0.04em', lineHeight: 0.95, color: '#EDE8E0', margin: '0 0 48px' }}>
+          Say<br /><span style={{ color: '#C8892A' }}>Hello.</span>
+        </motion.h2>
+
+        <motion.div variants={fadeUp} style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <motion.div
+            whileHover={{ rotate: 15, scale: 1.1 }} transition={spring}
+            style={{ width: 48, height: 48, borderRadius: '50%', background: '#111', border: '1px solid #242424', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flexShrink: 0, transition: 'border-color 0.2s' }}
+            onMouseEnter={e => e.currentTarget.style.borderColor = '#C8892A'}
+            onMouseLeave={e => e.currentTarget.style.borderColor = '#242424'}
+          >
+            <Mail size={16} color="#C8892A" />
+          </motion.div>
+          <div>
+            <p style={{ fontFamily: '"Inter",sans-serif', fontSize: '0.48rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#6B6560', margin: '0 0 4px' }}>Primary Contact</p>
+            <p style={{ fontFamily: '"Fraunces",serif', fontSize: '1.1rem', fontWeight: 300, color: '#EDE8E0', margin: 0 }}>daminigupta@email.com</p>
           </div>
-          <div className="space-y-2 border-b border-beige-dark pb-4 focus-within:border-charcoal transition-colors">
-            <label className="sans-label-base text-[0.55rem] uppercase tracking-[0.2em] font-medium text-charcoal/30 font-sans">Last Name</label>
-            <input type="text" className="w-full bg-transparent focus:outline-none text-xl font-light" />
+        </motion.div>
+      </motion.div>
+
+      {/* Right — form */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.15, duration: 0.9, ease: [0.16,1,0.3,1] }}
+        style={{ background: '#111111', border: '1px solid #1E1E1E', borderRadius: 4, padding: 40, display: 'flex', flexDirection: 'column', gap: 28 }}
+      >
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+          <div>
+            <label style={labelStyle}>First Name</label>
+            <input type="text" style={inputStyle}
+              onFocus={e => e.currentTarget.style.borderBottomColor = '#C8892A'}
+              onBlur={e => e.currentTarget.style.borderBottomColor = '#242424'}
+            />
+          </div>
+          <div>
+            <label style={labelStyle}>Last Name</label>
+            <input type="text" style={inputStyle}
+              onFocus={e => e.currentTarget.style.borderBottomColor = '#C8892A'}
+              onBlur={e => e.currentTarget.style.borderBottomColor = '#242424'}
+            />
           </div>
         </div>
-        <div className="space-y-2 border-b border-beige-dark pb-4 focus-within:border-charcoal transition-colors">
-          <label className="sans-label-base text-[0.55rem] uppercase tracking-[0.2em] font-medium text-charcoal/30 font-sans">Email Address</label>
-          <input type="email" className="w-full bg-transparent focus:outline-none text-xl font-light" />
+        <div>
+          <label style={labelStyle}>Email</label>
+          <input type="email" style={inputStyle}
+            onFocus={e => e.currentTarget.style.borderBottomColor = '#C8892A'}
+            onBlur={e => e.currentTarget.style.borderBottomColor = '#242424'}
+          />
         </div>
-        <div className="space-y-2 border-b border-beige-dark pb-8 focus-within:border-charcoal transition-colors">
-          <label className="sans-label-base text-[0.55rem] uppercase tracking-[0.2em] font-medium text-charcoal/30 font-sans">Message</label>
-          <textarea rows="4" className="w-full bg-transparent focus:outline-none text-xl font-light resize-none"></textarea>
+        <div>
+          <label style={labelStyle}>Message</label>
+          <textarea rows={4} style={{ ...inputStyle, resize: 'none' }}
+            onFocus={e => e.currentTarget.style.borderBottomColor = '#C8892A'}
+            onBlur={e => e.currentTarget.style.borderBottomColor = '#242424'}
+          />
         </div>
         <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.96 }}
-          transition={springTap}
-          className="w-full py-6 rounded-full bg-charcoal text-white sans-label-base text-[0.65rem] uppercase tracking-widest font-medium font-sans hover:bg-sunrise transition-colors shadow-lg hover:shadow-sunrise/20"
+          whileHover={{ scale: 1.02, backgroundColor: '#E0A840' }}
+          whileTap={{ scale: 0.97 }} transition={spring}
+          style={{ padding: '14px 0', background: '#C8892A', color: '#080808', border: 'none', borderRadius: 999, fontSize: '0.58rem', letterSpacing: '0.18em', textTransform: 'uppercase', fontFamily: '"Inter",sans-serif', fontWeight: 600, cursor: 'pointer' }}
         >
-          SEND MESSAGE
+          Send Message
         </motion.button>
       </motion.div>
     </div>
